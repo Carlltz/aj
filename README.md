@@ -38,7 +38,7 @@ Did you know that "aj" means "ouch" in Swedish? That's why this tool is named `a
 3. Build the project:
 
     ```sh
-    go build -o aj
+    make build
     ```
 
 4. Move the binary to a directory in your `$PATH` (optional but recommended):
