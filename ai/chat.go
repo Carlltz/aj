@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/Carlltz/aj/command"
@@ -27,10 +28,15 @@ func CorrectCommand(command command.Command) (string, error) {
 	ctx := context.Background()
 
 	// Question to ask the AI, fine-tuning needed!
-	question := fmt.Sprintf(`This command ran in fish shell: %s
-Gave the following output: %s
+	question := fmt.Sprintf(`This command ran in fish shell on %s: 
+%s
 
-Could you correct it so that it will execute successfully, change as little as possible.`, command.Command, command.Output)
+Gave the following output:
+%s
+
+Correct it so that it executes successfully, change as little as possible.`, GetOS(), command.Command, command.Output)
+
+	log.Println(question)
 
 	// Ask the AI to correct the command
 	chat, err := Client.Chat.Completions.New(ctx, openai.ChatCompletionNewParams{

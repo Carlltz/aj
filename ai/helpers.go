@@ -1,6 +1,10 @@
 package ai
 
-import "github.com/invopop/jsonschema"
+import (
+	"runtime"
+
+	"github.com/invopop/jsonschema"
+)
 
 // GenerateSchema generates a JSON schema for the AI
 func GenerateSchema[T any]() interface{} {
@@ -13,4 +17,18 @@ func GenerateSchema[T any]() interface{} {
 	var v T
 	schema := reflector.Reflect(v)
 	return schema
+}
+
+func GetOS() string {
+	os := runtime.GOOS
+	switch os {
+	case "darwin":
+		return "macOS"
+	case "linux":
+		return "Linux"
+	case "windows":
+		return "Windows"
+	default:
+		return os
+	}
 }
