@@ -68,6 +68,10 @@ The usage of the OpenAI API is very affordable. Approximately every 15-25 correc
 
 The `.env` file must contain a valid OpenAI API key to function properly. You can obtain an API key from [OpenAI](https://openai.com/api/).
 
+## Disclaimer
+
+I'm not very familiar with Go, so I might not have followed "best practices" at all. If you have suggestions for improvement, feel free to contribute!
+
 ## License
 
 MIT License
