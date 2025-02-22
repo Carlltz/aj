@@ -22,14 +22,17 @@ var schemaParam = openai.ResponseFormatJSONSchemaJSONSchemaParam{
 	Strict:      openai.Bool(true),
 }
 
+// CorrectCommand corrects a command using OpenAI
 func CorrectCommand(command command.Command) (string, error) {
 	ctx := context.Background()
 
+	// Question to ask the AI, fine-tuning needed!
 	question := fmt.Sprintf(`This command ran in fish shell: %s
 Gave the following output: %s
 
 Could you correct it so that it will execute successfully, change as little as possible.`, command.Command, command.Output)
 
+	// Ask the AI to correct the command
 	chat, err := Client.Chat.Completions.New(ctx, openai.ChatCompletionNewParams{
 		Messages: openai.F([]openai.ChatCompletionMessageParamUnion{
 			openai.UserMessage(question),

@@ -2,6 +2,7 @@ package ai
 
 import "github.com/invopop/jsonschema"
 
+// GenerateSchema generates a JSON schema for the AI
 func GenerateSchema[T any]() interface{} {
 	// Structured Outputs uses a subset of JSON schema
 	// These flags are necessary to comply with the subset

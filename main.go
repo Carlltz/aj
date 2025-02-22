@@ -3,7 +3,6 @@ package main
 import (
 	_ "embed"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
@@ -15,6 +14,9 @@ import (
 //go:embed .env
 var envFile string
 
+var red = color.New(color.FgRed).SprintFunc()
+var green = color.New(color.FgGreen).SprintFunc()
+
 func main() {
 	// Load environment variables from embedded .env file
 	lines := strings.Split(envFile, "\n")
@@ -25,39 +27,41 @@ func main() {
 		}
 	}
 
+	// Connect to OpenAI
 	wg := ai.ConnectOpenAI()
 
+	// Get the last command
 	lastCommand, err := command.GetLastCommand()
 	if err != nil {
-		log.Println("Error getting last command:", err)
+		fmt.Printf("%s\n%s", red("Error getting failed command"), err)
 		return
 	}
 
-	fmt.Print("\n")
+	// Print the last command
 	fmt.Print("Last command: ")
 	color.Blue(lastCommand.Command)
-	fmt.Print("\n")
 
+	// Wait for OpenAI to connect
 	wg.Wait()
 
+	// Correct the last command
 	updatedCommand, err := ai.CorrectCommand(lastCommand)
 	if err != nil {
-		log.Println("Error correcting command:", err)
+		fmt.Printf("%s\n%s", red("Error correcting command"), err)
 		return
 	}
 
-	red := color.New(color.FgRed).SprintFunc()
-	green := color.New(color.FgGreen).SprintFunc()
+	// Print the corrected command
 	fmt.Printf("%s or %s: ", red("Ctrl+C to exit"), green("Enter to run"))
 	color.Cyan(updatedCommand)
 
-	// Take user input
+	// Wait for user input
 	var input string
 	fmt.Scanln(&input)
 
-	// Run the updated command
+	// Run the updated command on enter
 	if input == "" {
-		err := command.RunCommand(updatedCommand)
+		err := command.RunCommandStdOut(updatedCommand)
 		if err != nil {
 			fmt.Printf("%s %s", red("Error running command:"), err)
 		}
