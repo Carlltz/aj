@@ -48,7 +48,7 @@ func main() {
 
 	red := color.New(color.FgRed).SprintFunc()
 	green := color.New(color.FgGreen).SprintFunc()
-	fmt.Printf("%s or %s: ", red("Ctrl+c to exit"), green("Enter to run"))
+	fmt.Printf("%s or %s: ", red("Ctrl+C to exit"), green("Enter to run"))
 	color.Cyan(updatedCommand)
 
 	// Take user input
