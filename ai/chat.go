@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/Carlltz/aj/command"
@@ -35,8 +34,6 @@ Gave the following output:
 %s
 
 Correct it so that it executes successfully, change as little as possible.`, GetOS(), command.Command, command.Output)
-
-	log.Println(question)
 
 	// Ask the AI to correct the command
 	chat, err := Client.Chat.Completions.New(ctx, openai.ChatCompletionNewParams{
