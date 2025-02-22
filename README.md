@@ -4,7 +4,7 @@
 
 ## Fun Fact
 
-Did you know that "aj" means "ouch" in Swedish? That's why this tool is named `aj`—to help ease the pain of mistyped commands! Plus, `aj` is quite similar to `ai`, which powers the tool to correct your commands.
+Did you know that "aj" means "ouch" in Swedish? That's why this tool is named `aj` — to help ease the pain of mistyped commands! Plus, `aj` is quite similar to `ai`, which powers the tool to correct your commands.
 
 ## Features
 
@@ -59,6 +59,10 @@ Ctrl+C to exit or Enter to run: echo Hello, World!
 ```
 
 Press **Enter** to run the suggested command or **Ctrl+C** to cancel.
+
+## Cost
+
+The usage of the OpenAI API is very affordable. Approximately every 15-25 corrected commands cost about 0.001 USD, making it a cost-effective solution for fixing command-line mistakes.
 
 ## Configuration
 
