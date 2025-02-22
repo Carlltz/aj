@@ -1,5 +1,7 @@
 # aj
 
+**Currently, `aj` is only available for the Fish shell, but you are more than welcome to add support for your preferred shell!**
+
 `aj` is a simple shell tool that automatically fixes mistakes in your last command. If you mistype a command, just type `aj`, and it will suggest a correction based on what you likely meant to run.
 
 ## Fun Fact
