@@ -52,8 +52,9 @@ func main() {
 	}
 
 	// Print the corrected command
-	fmt.Printf("%s or %s: ", red("Ctrl+C to exit"), green("Enter to run"))
+	fmt.Printf("%s: ", green("Enter to run"))
 	color.Cyan(updatedCommand)
+	fmt.Printf("%s\n", red("Ctrl+C to exit"))
 
 	// Wait for user input
 	var input string
