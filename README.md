@@ -16,14 +16,18 @@ Did you know that "aj" means "ouch" in Swedish? That's why this tool is named `a
 
 ## Installation
 
-1. Clone the repository:
+1. Install Go (version 1.23):
+
+    Follow the instructions on the [official Go website](https://golang.org/doc/install) to install Go version 1.23.
+
+2. Clone the repository:
 
     ```sh
     git clone https://github.com/Carlltz/aj
     cd aj
     ```
 
-2. Create a `.env` file based on `.env.example` and add your OpenAI API key:
+3. Create a `.env` file based on `.env.example` and add your OpenAI API key:
 
     ```sh
     cp .env.example .env
@@ -35,13 +39,13 @@ Did you know that "aj" means "ouch" in Swedish? That's why this tool is named `a
     OPENAI_API_KEY=your-api-key-here
     ```
 
-3. Build the project:
+4. Build the project:
 
     ```sh
     make build
     ```
 
-4. Move the binary to a directory in your `$PATH` (optional but recommended):
+5. Move the binary to a directory in your `$PATH` (optional but recommended):
 
     ```sh
     sudo mv aj /usr/local/bin/
