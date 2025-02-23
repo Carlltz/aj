@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	"github.com/Carlltz/aj/command"
+	"github.com/Carlltz/aj/utils"
 	"github.com/openai/openai-go"
 )
 
@@ -23,17 +23,18 @@ var schemaParam = openai.ResponseFormatJSONSchemaJSONSchemaParam{
 }
 
 // CorrectCommand corrects a command using OpenAI
-func CorrectCommand(command command.Command) (string, error) {
-	ctx := context.Background()
-
+func CorrectCommand(ctx context.Context, command command.Command) (string, error) {
 	// Question to ask the AI, fine-tuning needed!
-	question := fmt.Sprintf(`This command ran in fish shell on %s: 
+	// No newline after output print, since it's already included in the output
+	question := fmt.Sprintf(`This command ran in %s shell on %s:
 %s
 
-Gave the following output:
+Status:
 %s
 
-Correct it so that it executes successfully, change as little as possible.`, GetOS(), command.Command, command.Output)
+Output:
+%s
+Correct it so that it executes successfully, change as little as possible.`, utils.GetShell(), GetOS(), command.Command, command.Status, command.Output)
 
 	// Ask the AI to correct the command
 	chat, err := Client.Chat.Completions.New(ctx, openai.ChatCompletionNewParams{
@@ -59,5 +60,5 @@ Correct it so that it executes successfully, change as little as possible.`, Get
 		return "", err
 	}
 
-	return strings.TrimSpace(response.NewCommand), nil
+	return response.NewCommand, nil
 }
