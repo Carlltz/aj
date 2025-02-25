@@ -10,15 +10,14 @@ import (
 	"github.com/openai/openai-go"
 )
 
-type Response struct {
+type response struct {
 	NewCommand string `json:"new_command" jsonschema_description:"The new fixed command"`
 }
 
-var ResponseSchema = GenerateSchema[Response]()
 var schemaParam = openai.ResponseFormatJSONSchemaJSONSchemaParam{
 	Name:        openai.F("response"),
 	Description: openai.F("The response with the new command"),
-	Schema:      openai.F(ResponseSchema),
+	Schema:      openai.F(generateSchema[response]()),
 	Strict:      openai.Bool(true),
 }
 
@@ -34,7 +33,7 @@ Status:
 
 Output:
 %s
-Correct it so that it executes successfully, change as little as possible.`, utils.GetShell(), GetOS(), command.Command, command.Status, command.Output)
+Correct it so that it executes successfully, change as little as possible.`, utils.GetShell(), utils.GetOS(), command.Command, command.Status, command.Output)
 
 	// Ask the AI to correct the command
 	chat, err := Client.Chat.Completions.New(ctx, openai.ChatCompletionNewParams{
@@ -54,7 +53,7 @@ Correct it so that it executes successfully, change as little as possible.`, uti
 		return "", err
 	}
 
-	response := Response{}
+	response := response{}
 	err = json.Unmarshal([]byte(chat.Choices[0].Message.Content), &response)
 	if err != nil {
 		return "", err

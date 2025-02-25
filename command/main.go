@@ -1,24 +1,25 @@
 package command
 
 import (
-	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/Carlltz/aj/utils"
 )
 
 // GetLastCommand gets the last command and its output from the history
 func GetLastCommand() (Command, error) {
-	// Get last command from history, excl. first entry (which is the current command)
-	// Use "<>@%/:" as a delimiter to separate command, status, and output
-	out, err := runCommandReturnOut(`
-	set cmd (history -2 | sed -n "2p")
-    set output (eval $cmd 2>&1)
-	echo "$cmd<>@%/:$status<>@%/:$output"
-	`)
-	if err != "" {
-		return Command{}, fmt.Errorf("couldn't get last command: %s", err)
+	shell := utils.GetShell()
+	historyCommand, err := getShellHistoryCommand(shell)
+	if err != nil {
+		return Command{}, err
+	}
+
+	out, errOut := runCommandReturnOut(historyCommand)
+	if errOut != "" {
+		return Command{}, fmt.Errorf("couldn't get last command: %s", errOut)
 	}
 
 	parts := strings.Split(out, "<>@%/:")
@@ -32,20 +33,6 @@ func GetLastCommand() (Command, error) {
 	command.Output = parts[2]
 
 	return command, nil
-}
-
-// runCommandReturnOut executes a command and returns its stdout and stderr
-func runCommandReturnOut(command string) (string, string) {
-	cmd := exec.Command("fish", "-c", command)
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	err := cmd.Run()
-	if err != nil {
-		return "", stderr.String()
-	}
-	return out.String(), ""
 }
 
 // RunCommandStdOut runs a command and outputs to os.Stdout and os.Stderr
