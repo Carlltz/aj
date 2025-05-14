@@ -11,16 +11,23 @@ import (
 
 // GetLastCommand gets the last command and its output from the history
 func GetLastCommand() (Command, error) {
-	shell := utils.GetShell()
-	historyCommand, err := getShellHistoryCommand(shell)
+	historyCommand, err := getShellHistoryCommand()
 	if err != nil {
 		return Command{}, err
 	}
 
-	out, errOut := runCommandReturnOut(historyCommand)
+	out, errOut := runCommandReturnOut("history -2")
+	fmt.Println(out)
+	fmt.Println(errOut)
+	os.Exit(0)
+
+	out, errOut = runCommandReturnOut(historyCommand)
 	if errOut != "" {
 		return Command{}, fmt.Errorf("couldn't get last command: %s", errOut)
 	}
+
+	fmt.Println(out)
+	os.Exit(0)
 
 	parts := strings.Split(out, "<>@%/:")
 	if len(parts) != 3 {
@@ -37,7 +44,7 @@ func GetLastCommand() (Command, error) {
 
 // RunCommandStdOut runs a command and outputs to os.Stdout and os.Stderr
 func RunCommandStdOut(command string) error {
-	cmd := exec.Command("fish", "-c", command)
+	cmd := exec.Command(utils.GetShell(), "-c", command)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()

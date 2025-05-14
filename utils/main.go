@@ -6,8 +6,15 @@ import (
 	"strings"
 )
 
+var shell string
+
+// /opt/homebrew/bin/fish
 func GetShell() string {
-	shell := os.Getenv("SHELL")
+	if shell != "" {
+		return shell
+	}
+
+	shell = os.Getenv("SHELL")
 	if shell == "" {
 		return "unknown"
 	}
