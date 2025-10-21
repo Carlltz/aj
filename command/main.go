@@ -16,18 +16,10 @@ func GetLastCommand() (Command, error) {
 		return Command{}, err
 	}
 
-	out, errOut := runCommandReturnOut("history -2")
-	fmt.Println(out)
-	fmt.Println(errOut)
-	os.Exit(0)
-
-	out, errOut = runCommandReturnOut(historyCommand)
+	out, errOut := runCommandReturnOut(historyCommand)
 	if errOut != "" {
 		return Command{}, fmt.Errorf("couldn't get last command: %s", errOut)
 	}
-
-	fmt.Println(out)
-	os.Exit(0)
 
 	parts := strings.Split(out, "<>@%/:")
 	if len(parts) != 3 {

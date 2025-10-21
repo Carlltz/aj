@@ -25,6 +25,8 @@ func runCommandReturnOut(command string) (string, string) {
 // Get last command from history, excl. first entry (which is the current command)
 //
 // Use "<>@%/:" as a delimiter to separate command, status, and output
+//
+// Note: bash requires `history -a` to be run before aj to ensure the history file is up to date
 func getShellHistoryCommand() (string, error) {
 	shell := utils.GetShell()
 	switch shell {
