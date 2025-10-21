@@ -51,6 +51,30 @@ Did you know that "aj" means "ouch" in Swedish? That's why this tool is named `a
     sudo mv aj /usr/local/bin/
     ```
 
+6. Add the following to your shell configuration file to store the last command automatically:
+
+    - **Fish shell**:
+
+        ```fish
+        function record_last_command --on-event fish_postexec
+            echo $argv[1] > ~/.last_fish_command
+        end
+        ```
+
+    - **Bash shell**:
+
+        ```bash
+        PROMPT_COMMAND='history 1 | sed -n "1p" > ~/.last_bash_command'
+        ```
+
+    - **Zsh shell**:
+
+        ```zsh
+        precmd() {
+          fc -ln -1 > ~/.last_zsh_command
+        }
+        ```
+
 ## Usage
 
 Simply type `aj` after running a command that failed:
