@@ -7,17 +7,18 @@ import (
 
 	"github.com/Carlltz/aj/command"
 	"github.com/Carlltz/aj/utils"
-	"github.com/openai/openai-go"
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/shared"
 )
 
 type response struct {
-	NewCommand string `json:"new_command" jsonschema_description:"The new fixed command"`
+	NewCommand string `json:"new_command" jsonschema_description:"The new working command"`
 }
 
 var schemaParam = openai.ResponseFormatJSONSchemaJSONSchemaParam{
-	Name:        openai.F("response"),
-	Description: openai.F("The response with the new command"),
-	Schema:      openai.F(generateSchema[response]()),
+	Name:        "response",
+	Description: openai.String("The response with the new working command"),
+	Schema:      generateSchema[response](),
 	Strict:      openai.Bool(true),
 }
 
@@ -33,21 +34,22 @@ Status:
 
 Output:
 %s
-Correct it so that it executes successfully, change as little as possible.`, utils.GetShell(), utils.GetOS(), command.Command, command.Status, command.Output)
+
+Correct it so that it executes successfully without changing anything else.`, utils.GetShell(), utils.GetOS(), command.Command, command.Status, command.Output)
 
 	// Ask the AI to correct the command
 	chat, err := Client.Chat.Completions.New(ctx, openai.ChatCompletionNewParams{
-		Messages: openai.F([]openai.ChatCompletionMessageParamUnion{
+		Messages: []openai.ChatCompletionMessageParamUnion{
 			openai.UserMessage(question),
-		}),
-		ResponseFormat: openai.F[openai.ChatCompletionNewParamsResponseFormatUnion](
-			openai.ResponseFormatJSONSchemaParam{
-				Type:       openai.F(openai.ResponseFormatJSONSchemaTypeJSONSchema),
-				JSONSchema: openai.F(schemaParam),
+		},
+		ResponseFormat: openai.ChatCompletionNewParamsResponseFormatUnion{
+			OfJSONSchema: &shared.ResponseFormatJSONSchemaParam{
+				JSONSchema: schemaParam,
 			},
-		),
+		},
 		// Only certain models: https://platform.openai.com/docs/guides/structured-outputs#supported-models
-		Model: openai.F(openai.ChatModelGPT4oMini),
+		Model:           shared.ChatModelGPT5Mini,
+		ReasoningEffort: "minimal",
 	})
 	if err != nil {
 		return "", err
