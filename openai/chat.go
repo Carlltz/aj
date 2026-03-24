@@ -1,11 +1,13 @@
-package ai
+package openai
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 
+	"github.com/Carlltz/aj/cmdArgs"
 	"github.com/Carlltz/aj/command"
+	"github.com/Carlltz/aj/config"
 	"github.com/Carlltz/aj/utils"
 	"github.com/openai/openai-go/v3"
 	"github.com/openai/openai-go/v3/shared"
@@ -38,6 +40,39 @@ Output:
 Correct it so that it executes successfully without changing anything else.`, utils.GetShell(), utils.GetOS(), command.Command, command.Status, command.Output)
 
 	// Ask the AI to correct the command
+	chat, err := Client.Chat.Completions.New(ctx, openai.ChatCompletionNewParams{
+		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.UserMessage(question),
+		},
+		ResponseFormat: openai.ChatCompletionNewParamsResponseFormatUnion{
+			OfJSONSchema: &shared.ResponseFormatJSONSchemaParam{
+				JSONSchema: schemaParam,
+			},
+		},
+		// Only certain models: https://platform.openai.com/docs/guides/structured-outputs#supported-models
+		Model:           shared.ChatModelGPT5Mini,
+		ReasoningEffort: "minimal",
+	})
+	if err != nil {
+		return "", err
+	}
+
+	response := response{}
+	err = json.Unmarshal([]byte(chat.Choices[0].Message.Content), &response)
+	if err != nil {
+		return "", err
+	}
+
+	return response.NewCommand, nil
+}
+
+// GenerateCommand generates a command using OpenAI
+func GenerateCommand(ctx context.Context, flags cmdArgs.Flags) (string, error) {
+	cfg := config.GetConfig()
+	// Question to ask the AI, fine-tuning needed!
+	question := fmt.Sprintf(`Please generate a command for %s shell on %s that achieves the following: %s`, flags.Shell, cfg.Os, flags.Content)
+
+	// Ask the AI to generate the command
 	chat, err := Client.Chat.Completions.New(ctx, openai.ChatCompletionNewParams{
 		Messages: []openai.ChatCompletionMessageParamUnion{
 			openai.UserMessage(question),

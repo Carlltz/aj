@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	_ "embed"
 	"fmt"
@@ -9,8 +8,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/Carlltz/aj/ai"
-	"github.com/Carlltz/aj/command"
+	"github.com/Carlltz/aj/cmdArgs"
+	"github.com/Carlltz/aj/tools"
 	"github.com/fatih/color"
 )
 
@@ -32,40 +31,16 @@ func main() {
 		os.Exit(0)
 	}()
 
-	// Connect to OpenAI
-	ai.ConnectOpenAI(envFile)
-
-	// Get the last command
-	lastCommand, err := command.GetLastCommand()
+	cmdFlags, err := cmdArgs.GetCmdFlags()
 	if err != nil {
-		fmt.Printf("%s\n%s", red("Error getting failed command"), err)
-		return
+		fmt.Printf("%s", red(fmt.Sprintf("Error parsing command flags: %v", err)))
+		os.Exit(1)
 	}
 
-	// Print the last command
-	fmt.Print("Last command: ")
-	color.Blue(lastCommand.Command)
-
-	// Correct the last command
-	updatedCommand, err := ai.CorrectCommand(ctx, lastCommand)
-	if err != nil {
-		fmt.Printf("%s\n%s", red("Error correcting command"), err)
-		return
+	switch cmdFlags.Cmd {
+	case cmdArgs.CmdCorrect:
+		tools.CorrectCommand(ctx)
+	case cmdArgs.CmdGenerate:
+		// Handle CmdGenerate
 	}
-
-	// Print the corrected command
-	fmt.Printf("%s: ", green("Enter to run"))
-	color.Cyan(updatedCommand)
-	fmt.Printf("%s\n", red("Ctrl+C to exit"))
-
-	// Listen for Enter key press
-	go func() {
-		bufio.NewReader(os.Stdin).ReadBytes('\n') // Wait for Enter
-		fmt.Printf("%s\n", green("Output:"))
-		command.RunCommandStdOut(updatedCommand)
-		os.Exit(0)
-	}()
-
-	// Keep alive
-	<-ctx.Done()
 }
