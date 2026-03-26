@@ -13,7 +13,11 @@ import (
 
 func CorrectCommand(ctx context.Context) {
 	// Connect to Claude
-	claude.ConnectClaude("envFile") // TODO
+	err := claude.ConnectClaude()
+	if err != nil {
+		fmt.Printf("%s\n%s", red("Error connecting to Claude"), err)
+		return
+	}
 
 	// Get the last command
 	lastCommand, err := command.GetLastCommand()

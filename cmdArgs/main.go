@@ -18,7 +18,7 @@ func GetCmdFlags() (Flags, error) {
 	}
 
 	argsIndex := 0
-	for argsIndex < len(args) {
+	for argsIndex < len(args)-1 {
 		arg := args[argsIndex]
 
 		var extraFields []string

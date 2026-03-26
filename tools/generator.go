@@ -14,7 +14,11 @@ import (
 
 func GenerateCommand(ctx context.Context, flags cmdArgs.Flags) {
 	// Connect to Claude
-	claude.ConnectClaude("envFile") // TODO
+	err := claude.ConnectClaude()
+	if err != nil {
+		fmt.Printf("%s\n%s", red("Error connecting to Claude"), err)
+		return
+	}
 
 	// Generate a new command
 	generatedCommand, err := claude.GenerateCommand(ctx, flags)

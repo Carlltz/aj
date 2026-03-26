@@ -1,8 +1,7 @@
 package claude
 
 import (
-	"strings"
-
+	"github.com/Carlltz/aj/config"
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/anthropics/anthropic-sdk-go/option"
 )
@@ -10,8 +9,12 @@ import (
 var Client *anthropic.Client
 
 // ConnectClaude connects to Claude API
-func ConnectClaude(envFile string) {
-	claudeKey := strings.Trim(strings.SplitN(envFile, "=", 2)[1], "\n")
+func ConnectClaude() error {
+	claudeKey, err := config.GetAPIKey()
+	if err != nil {
+		return err
+	}
 	client := anthropic.NewClient(option.WithAPIKey(claudeKey))
 	Client = &client
+	return nil
 }
