@@ -1,11 +1,11 @@
-package ai
+package claude
 
 import (
 	"github.com/invopop/jsonschema"
 )
 
 // generateSchema generates a JSON schema for the AI
-func generateSchema[T any]() interface{} {
+func generateSchema[T any]() any {
 	// Structured Outputs uses a subset of JSON schema
 	// These flags are necessary to comply with the subset
 	reflector := jsonschema.Reflector{
