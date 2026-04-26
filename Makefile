@@ -6,3 +6,6 @@ build:
 
 addbin:
 	sudo cp aj /usr/local/bin
+
+adduserbin:
+	cp aj ~/.local/bin
