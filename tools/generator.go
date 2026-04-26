@@ -30,7 +30,7 @@ func GenerateCommand(ctx context.Context, flags cmdArgs.Flags) {
 	for {
 		fmt.Printf("%s ", green("Command:"))
 		color.Cyan(result.Command)
-		fmt.Printf("%s %s %s\n", green("Enter to run,"), red("Ctrl+C to exit"), blue("or type a follow-up to refine:"))
+		fmt.Printf("%s %s\n", green("Enter to run"), blue("or type a follow-up to refine:"))
 
 		line, _ := reader.ReadString('\n')
 		line = strings.TrimSpace(line)
