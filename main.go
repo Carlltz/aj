@@ -37,11 +37,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(cmdFlags)
-
 	switch cmdFlags.Cmd {
 	case cmdArgs.CmdCorrect:
-		tools.CorrectCommand(ctx)
+		tools.CorrectCommand(ctx, cmdFlags)
 	case cmdArgs.CmdGenerate:
 		tools.GenerateCommand(ctx, cmdFlags)
 	case cmdArgs.CmdConfig:

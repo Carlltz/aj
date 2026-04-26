@@ -6,13 +6,12 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/Carlltz/aj/utils"
+	"github.com/Carlltz/aj/cmdArgs"
 )
 
 // GetLastCommand gets the last command and its output from the history
-func GetLastCommand() (Command, error) {
-	shell := utils.GetShell()
-	historyCommand, err := getShellHistoryCommand(shell)
+func GetLastCommand(cmdFlags cmdArgs.Flags) (Command, error) {
+	historyCommand, err := getShellHistoryCommand(string(cmdFlags.Shell))
 	if err != nil {
 		return Command{}, err
 	}

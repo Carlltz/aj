@@ -13,11 +13,8 @@ func GetCmdFlags() (Flags, error) {
 	args := os.Args[1:]
 	flags := Flags{}
 
-	if len(args) == 0 {
-		return flags, nil
-	}
-
 	argsIndex := 0
+outerLoop:
 	for argsIndex < len(args)-1 {
 		arg := args[argsIndex]
 
@@ -40,20 +37,24 @@ func GetCmdFlags() (Flags, error) {
 			}
 		default:
 			// No more flags
-			break
+			break outerLoop
 		}
 
 		argsIndex++
 	}
 
-	flags.Cmd = CmdType(args[argsIndex])
-	if err := flags.Cmd.Validate(); err != nil {
-		// If no command identified default to correct if no instructions or generate if instructions
-		if argsIndex == len(args)-1 {
-			flags.Cmd = CmdCorrect
-		} else {
-			flags.Cmd = CmdGenerate
+	if len(args) > 0 {
+		flags.Cmd = CmdType(args[argsIndex])
+		if err := flags.Cmd.Validate(); err != nil {
+			// If no command identified default to correct if no instructions or generate if instructions
+			if argsIndex == len(args)-1 {
+				flags.Cmd = CmdCorrect
+			} else {
+				flags.Cmd = CmdGenerate
+			}
 		}
+	} else {
+		flags.Cmd = CmdCorrect
 	}
 
 	if flags.Shell == "" {
@@ -71,7 +72,7 @@ func GetCmdFlags() (Flags, error) {
 		}
 	}
 
-	flags.Content = strings.Join(args[argsIndex+1:], " ")
+	flags.Content = strings.Join(args[argsIndex:], " ")
 
 	return flags, nil
 }

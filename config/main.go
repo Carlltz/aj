@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/Carlltz/aj/utils"
 )
 
-const ConfigPath = "~/.config/aj/config.json"
+var ConfigPath = filepath.Join(os.Getenv("HOME"), ".config", "aj", "config.json")
 
 var config *Config
 
@@ -42,6 +43,9 @@ func loadConfig() *Config {
 			})
 			if err != nil {
 				fmt.Println("Failed to marshall config", err)
+			}
+			if err := os.MkdirAll(filepath.Dir(ConfigPath), 0o755); err != nil {
+				fmt.Println("Failed to create config directory", err)
 			}
 			err = os.WriteFile(ConfigPath, jsonData, 0644)
 			if err != nil {

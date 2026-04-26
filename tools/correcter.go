@@ -7,11 +7,12 @@ import (
 	"os"
 
 	"github.com/Carlltz/aj/claude"
+	"github.com/Carlltz/aj/cmdArgs"
 	"github.com/Carlltz/aj/command"
 	"github.com/fatih/color"
 )
 
-func CorrectCommand(ctx context.Context) {
+func CorrectCommand(ctx context.Context, cmdFlags cmdArgs.Flags) {
 	// Connect to Claude
 	err := claude.ConnectClaude()
 	if err != nil {
@@ -20,7 +21,7 @@ func CorrectCommand(ctx context.Context) {
 	}
 
 	// Get the last command
-	lastCommand, err := command.GetLastCommand()
+	lastCommand, err := command.GetLastCommand(cmdFlags)
 	if err != nil {
 		fmt.Printf("%s\n%s", red("Error getting failed command"), err)
 		return

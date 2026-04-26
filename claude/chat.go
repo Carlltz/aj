@@ -89,7 +89,7 @@ func GenerateCommand(ctx context.Context, flags cmdArgs.Flags) (string, error) {
 
 	// Ask the AI to generate the command
 	message, err := Client.Messages.New(ctx, anthropic.MessageNewParams{
-		Model:     anthropic.ModelClaudeHaiku4_5,
+		Model:     anthropic.ModelClaudeSonnet4_6,
 		MaxTokens: 1024,
 		Tools: []anthropic.ToolUnionParam{
 			toolDefinition,
