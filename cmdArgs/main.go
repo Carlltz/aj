@@ -2,15 +2,14 @@ package cmdArgs
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/Carlltz/aj/config"
 	"github.com/Carlltz/aj/utils"
 )
 
-func GetCmdFlags() (Flags, error) {
-	args := os.Args[1:]
+// Skip the program name (os.Args[1:])
+func GetCmdFlags(args []string) (Flags, error) {
 	flags := Flags{}
 
 	argsIndex := 0
@@ -47,11 +46,13 @@ outerLoop:
 		flags.Cmd = CmdType(args[argsIndex])
 		if err := flags.Cmd.Validate(); err != nil {
 			// If no command identified default to correct if no instructions or generate if instructions
-			if argsIndex == len(args)-1 {
+			if argsIndex == len(args) {
 				flags.Cmd = CmdCorrect
 			} else {
 				flags.Cmd = CmdGenerate
 			}
+		} else {
+			argsIndex++
 		}
 	} else {
 		flags.Cmd = CmdCorrect

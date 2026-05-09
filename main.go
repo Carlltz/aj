@@ -13,11 +13,7 @@ import (
 	"github.com/fatih/color"
 )
 
-//go:embed .env
-var envFile string
-
 var red = color.New(color.FgRed).SprintFunc()
-var green = color.New(color.FgGreen).SprintFunc()
 
 func main() {
 	// Create a context that listens for Ctrl+C (SIGINT) and SIGTERM
@@ -31,7 +27,7 @@ func main() {
 		os.Exit(0)
 	}()
 
-	cmdFlags, err := cmdArgs.GetCmdFlags()
+	cmdFlags, err := cmdArgs.GetCmdFlags(os.Args[1:])
 	if err != nil {
 		fmt.Printf("%s", red(fmt.Sprintf("Error parsing command flags: %v", err)))
 		os.Exit(1)
