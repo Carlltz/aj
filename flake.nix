@@ -1,5 +1,5 @@
 {
-  description = "Tanny Backend";
+  description = "aj - a shell tool that automatically fixes mistakes in your last command";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -12,12 +12,21 @@
       nixpkgs,
       flake-utils,
     }:
-    flake-utils.lib.eachDefaultSystem (
+    {
+      overlays.default = final: prev: {
+        aj = final.callPackage ./package.nix { };
+      };
+    }
+    // flake-utils.lib.eachDefaultSystem (
       system:
       let
         pkgs = import nixpkgs { inherit system; };
       in
       {
+        packages = rec {
+          aj = pkgs.callPackage ./package.nix { };
+          default = aj;
+        };
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
